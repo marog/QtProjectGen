@@ -34,15 +34,15 @@ def makePro(target_dir):
              "CONFIG -= app_bundle\n" \
              "CONFIG -= qt\n" \
              "CONFIG += c++11\n" \
-             "CONFIG += stl\n"
+             "CONFIG += stl\n" \
 
-    INC = "INCLUDEPATH += \\ \n"
-    SRC = "SOURCES += \\ \n"
-    HEADERS = "HEADERS += \\ \n"
+    INC = "INCLUDEPATH += "
+    SRC = "SOURCES += "
+    HEADERS = "HEADERS += "
 
     for root, dirs, files in os.walk(target_dir):
         def add_esc(text):
-            return text + " \\ \n"
+            return text + " \\\n"
 
         rel_dir = os.path.relpath(root, target_dir)
         INC += add_esc(rel_dir)
@@ -51,7 +51,9 @@ def makePro(target_dir):
                 HEADERS += add_esc(os.path.join(rel_dir, file))
             elif file.endswith((".c", ".cpp", ".cxx")):
                 SRC += add_esc(os.path.join(rel_dir, file))
-
+    INC = INC.rstrip("\\\n")
+    SRC = SRC.rstrip("\\\n")
+    HEADERS = HEADERS.rstrip("\\\n")
     return HEADER + "\n" + INC + "\n" + SRC + "\n" + HEADERS + "\n"
 
 
